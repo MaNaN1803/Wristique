@@ -27,7 +27,7 @@ module.exports = {
         pmedium: ["Poppins-Medium", "sans-serif"],
         psemibold: ["Poppins-SemiBold", "sans-serif"],
         pbold: ["Poppins-Bold", "sans-serif"],
-        pextrabold: ["Poppins-ExtraBold", "sans-serif"],
+        pextrabold: ["Poppins-Bold", "sans-serif"],
         pblack: ["Poppins-Black", "sans-serif"],
       },
     },
