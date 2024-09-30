@@ -6,7 +6,7 @@ import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
 import { images } from "../../constants";
 // import { createUser } from "../../lib/appwrite";
 
-// import { useGlobalContext } from "../../context/GlobalProvider";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
