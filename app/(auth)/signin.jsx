@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
-
 import { images } from "../../constants";
-import CustomButton from "../../components/CustomButton";
-import FormField from "../../components/Formfield";
-// import { getCurrentUser, signIn } from "../../lib/appwrite";
+import CustomButton from "../../components/CustomButton.jsx";
+import FormField from "../../components/FormField.jsx";
+import { getCurrentUser, signIn } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Signin = () => {
@@ -17,9 +16,27 @@ const Signin = () => {
     password: "",
   });
 
+  useEffect(() => {
+    const checkUserLoggedIn = async () => {
+      try {
+        const result = await getCurrentUser();
+        if (result) {
+          setUser(result);
+          setIsLogged(true);
+          router.replace("/home");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkUserLoggedIn();
+  }, []); // Runs only once on component mount
+
   const submit = async () => {
     if (form.email === "" || form.password === "") {
       Alert.alert("Error", "Please fill in all fields");
+      return; // Return early to prevent further execution
     }
 
     setSubmitting(true);
@@ -53,7 +70,6 @@ const Signin = () => {
             resizeMode="contain"
             className="w-[115px] h-[34px]"
           />
-
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
             Log in to Aora
           </Text>
@@ -85,10 +101,10 @@ const Signin = () => {
               Don't have an account?
             </Text>
             <Link
-              href="/Signup"
+              href="/signup"
               className="text-lg font-psemibold text-secondary"
             >
-              Signup
+              SignUp
             </Link>
           </View>
         </View>

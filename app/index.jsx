@@ -6,8 +6,15 @@ import * as Animatable from 'react-native-animatable';
 import { router } from "expo-router";
 import { images } from "../constants";
 import CustomButton from '../components/CustomButton';
-
+import { useGlobalContext } from "../context/GlobalProvider";
 export default function App() {
+  const { loading, isLogged } = useGlobalContext();
+
+  if (!loading && isLogged) {
+    router.replace("/home");
+    return null; 
+  }
+  
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
       <LinearGradient

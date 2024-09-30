@@ -1,16 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
-
+import CustomButton from "../../components/CustomButton.jsx";
+import FormField from "../../components/FormField.jsx";
 import { images } from "../../constants";
-// import { createUser } from "../../lib/appwrite";
-
+import { createUser, getCurrentUser } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignUp = () => {
   const { setUser, setIsLogged } = useGlobalContext();
-
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     username: "",
@@ -18,9 +17,27 @@ const SignUp = () => {
     password: "",
   });
 
+  useEffect(() => {
+    const checkUserLoggedIn = async () => {
+      try {
+        const result = await getCurrentUser();
+        if (result) {
+          setUser(result);
+          setIsLogged(true);
+          router.replace("/home");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkUserLoggedIn();
+  }, []); // Runs only once on component mount
+
   const submit = async () => {
     if (form.username === "" || form.email === "" || form.password === "") {
       Alert.alert("Error", "Please fill in all fields");
+      return; // Return early to prevent further execution
     }
 
     setSubmitting(true);
@@ -28,7 +45,6 @@ const SignUp = () => {
       const result = await createUser(form.email, form.password, form.username);
       setUser(result);
       setIsLogged(true);
-
       router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -51,7 +67,6 @@ const SignUp = () => {
             resizeMode="contain"
             className="w-[115px] h-[34px]"
           />
-
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
             Sign Up to Aora
           </Text>
@@ -90,7 +105,7 @@ const SignUp = () => {
               Have an account already?
             </Text>
             <Link
-              href="/sign-in"
+              href="/signin"
               className="text-lg font-psemibold text-secondary"
             >
               Login
